@@ -1,0 +1,599 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Calorie Tracker</title>
+    <!-- Simple black apple icon for web app bookmarks -->
+    <link rel="apple-touch-icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22></text></svg>">
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: #111827;
+            color: #e5e7eb;
+        }
+        .card {
+            background-color: #1f2937;
+            border: 1px solid #374151;
+            border-radius: 0.75rem;
+            padding: 1.5rem;
+            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -2px rgba(0, 0, 0, 0.1);
+        }
+        .btn {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            padding: 0.75rem 1.5rem;
+            border-radius: 0.5rem;
+            font-weight: 600;
+            transition: all 0.2s ease-in-out;
+            cursor: pointer;
+            border: none;
+        }
+        .btn-primary {
+            background-color: #3b82f6;
+            color: white;
+        }
+        .btn-primary:hover {
+            background-color: #2563eb;
+        }
+        .btn-danger {
+            background-color: #ef4444;
+            color: white;
+        }
+        .btn-danger:hover {
+            background-color: #dc2626;
+        }
+        .btn-secondary {
+            background-color: #4b5563;
+            color: white;
+        }
+        .btn-secondary:hover {
+            background-color: #374151;
+        }
+        .input-field {
+            background-color: #374151;
+            border: 1px solid #4b5563;
+            color: #e5e7eb;
+            border-radius: 0.5rem;
+            padding: 0.75rem 1rem;
+            width: 100%;
+            transition: border-color 0.2s ease-in-out, box-shadow 0.2s ease-in-out;
+        }
+        .input-field:focus {
+            outline: none;
+            border-color: #3b82f6;
+            box-shadow: 0 0 0 2px rgba(59, 130, 246, 0.5);
+        }
+        .total-display {
+            background-color: #374151;
+            padding: 1rem 1.5rem;
+            border-radius: 0.75rem;
+            text-align: center;
+        }
+        .total-value {
+            font-size: 2.25rem;
+            line-height: 2.5rem;
+            font-weight: 700;
+            color: white;
+        }
+        .total-label {
+            font-size: 0.875rem;
+            line-height: 1.25rem;
+            color: #9ca3af;
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+        }
+        /* Progress Bar */
+        .progress-bar-container {
+            width: 100%;
+            background-color: #1f2937;
+            border-radius: 9999px;
+            height: 1.25rem;
+            overflow: hidden;
+            border: 1px solid #4b5563;
+        }
+        .progress-bar {
+            background-color: #3b82f6;
+            height: 100%;
+            width: 0%;
+            border-radius: 9999px;
+            transition: width 0.5s ease-in-out;
+            text-align: center;
+            color: white;
+            font-size: 0.75rem;
+            line-height: 1.25rem;
+        }
+        .protein-progress-bar {
+            background-color: #8b5cf6;
+        }
+
+        /* Scrollbar styling */
+        ::-webkit-scrollbar { width: 8px; }
+        ::-webkit-scrollbar-track { background: #1f2937; }
+        ::-webkit-scrollbar-thumb { background: #4b5563; border-radius: 10px; }
+        ::-webkit-scrollbar-thumb:hover { background: #6b7280; }
+
+        /* Modal styles */
+        .modal-backdrop {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0, 0, 0, 0.7);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            z-index: 50;
+        }
+        .modal-content {
+            background-color: #1f2937;
+            padding: 2rem;
+            border-radius: 0.75rem;
+            width: 90%;
+            max-width: 400px;
+        }
+    </style>
+</head>
+<body class="p-4 md:p-8">
+
+    <div class="max-w-7xl mx-auto">
+        <header class="flex justify-center items-center text-center mb-8 relative">
+            <div>
+                <h1 class="text-4xl md:text-5xl font-bold text-white tracking-tight">Calorie Tracker</h1>
+                <p class="text-lg text-gray-400 mt-2">Your daily nutrition at a glance.</p>
+            </div>
+            <button id="settings-btn" class="absolute right-0 top-1/2 -translate-y-1/2 text-gray-400 hover:text-white transition-colors p-2">
+                 <svg class="h-8 w-8" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor">
+                    <path stroke-linecap="round" stroke-linejoin="round" d="M9.594 3.94c.09-.542.56-.94 1.11-.94h2.593c.55 0 1.02.398 1.11.94l.213 1.281c.063.374.313.686.645.87.074.04.147.083.22.127.324.196.72.257 1.075.124l1.217-.456a1.125 1.125 0 011.37.49l1.296 2.247a1.125 1.125 0 01-.26 1.431l-1.003.827c-.293.24-.438.613-.438.995s.145.755.438.995l1.003.827c.48.398.668 1.03.26 1.431l-1.296 2.247a1.125 1.125 0 01-1.37.49l-1.217-.456c-.355-.133-.75-.072-1.076.124a6.57 6.57 0 01-.22.128c-.331.183-.581.495-.644.869l-.213 1.28c-.09.543-.56.941-1.11.941h-2.594c-.55 0-1.02-.398-1.11-.94l-.213-1.281c-.063-.374-.313-.686-.645-.87a6.52 6.52 0 01-.22-.127c-.324-.196-.72-.257-1.075-.124l-1.217.456a1.125 1.125 0 01-1.37-.49l-1.296-2.247a1.125 1.125 0 01.26-1.431l1.004-.827c.292-.24.437-.613.437-.995s-.145-.755-.437-.995l-1.004-.827a1.125 1.125 0 01-.26-1.431l1.296-2.247a1.125 1.125 0 011.37-.49l1.217.456c.355.133.75.072 1.076-.124.072-.044.146-.087.22-.128.332-.183.582-.495.644-.869l.214-1.281z" />
+                    <path stroke-linecap="round" stroke-linejoin="round" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" />
+                </svg>
+            </button>
+        </header>
+
+        <main class="grid grid-cols-1 lg:grid-cols-3 gap-8">
+            
+            <div class="lg:col-span-2 space-y-8">
+                 <!-- Totals -->
+                <div class="grid grid-cols-1 sm:grid-cols-2 gap-6">
+                    <div class="total-display">
+                        <div id="total-calories" class="total-value">0</div>
+                        <div class="total-label">Total Calories</div>
+                        <div class="progress-bar-container mt-4">
+                            <div id="calorie-progress-bar" class="progress-bar"></div>
+                        </div>
+                        <div id="remaining-calories" class="text-sm text-gray-400 mt-2">...</div>
+                    </div>
+                    <div class="total-display">
+                        <div id="total-protein" class="total-value">0</div>
+                        <div class="total-label">Total Protein (g)</div>
+                        <div class="progress-bar-container mt-4">
+                            <div id="protein-progress-bar" class="progress-bar protein-progress-bar"></div>
+                        </div>
+                        <div id="remaining-protein" class="text-sm text-gray-400 mt-2">...</div>
+                    </div>
+                </div>
+
+                <!-- Add Food Forms -->
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                    <div class="card">
+                        <h2 class="text-xl font-semibold mb-4 text-white">Quick Add</h2>
+                        <form id="manual-add-form" class="space-y-4">
+                            <input id="manual-name" type="text" placeholder="Food Name (optional)" class="input-field">
+                            <input id="manual-calories" type="number" placeholder="Calories" class="input-field" required>
+                            <input id="manual-protein" type="number" placeholder="Protein (g)" class="input-field" required>
+                            <button type="submit" class="btn btn-primary w-full">Add Entry</button>
+                        </form>
+                    </div>
+
+                    <div class="card">
+                         <h2 class="text-xl font-semibold mb-4 text-white">Add From Presets</h2>
+                         <form id="preset-add-form" class="space-y-4">
+                            <select id="preset-select" class="input-field" required>
+                                <option value="" disabled selected>Select a preset food</option>
+                            </select>
+                            <input id="preset-grams" type="number" placeholder="Grams Eaten" class="input-field" required>
+                            <button type="submit" class="btn btn-primary w-full">Add Preset</button>
+                         </form>
+                    </div>
+                </div>
+
+                <!-- Daily Log -->
+                <div class="card">
+                    <div class="flex justify-between items-center mb-4">
+                        <h2 class="text-xl font-semibold text-white">Today's Log</h2>
+                        <button id="reset-day-btn" class="btn btn-danger">Reset Day</button>
+                    </div>
+                    <div id="daily-log-list" class="space-y-3 max-h-96 overflow-y-auto pr-2">
+                        <p class="text-gray-400 text-center py-4">Your daily log is empty. Add an item to get started!</p>
+                    </div>
+                </div>
+            </div>
+
+            <div class="lg:col-span-1 space-y-8">
+                <div class="card">
+                    <h2 class="text-xl font-semibold mb-4 text-white">Create Preset Item</h2>
+                    <form id="preset-create-form" class="space-y-4">
+                        <input id="preset-name" type="text" placeholder="Item Name" class="input-field" required>
+                        <input id="preset-calories-per-serving" type="number" placeholder="Calories per serving" class="input-field" required>
+                        <input id="preset-protein-per-serving" type="number" placeholder="Protein (g) per serving" class="input-field" required>
+                        <input id="preset-grams-per-serving" type="number" placeholder="Grams per serving" class="input-field" required>
+                        <button type="submit" class="btn btn-secondary w-full">Save New Preset</button>
+                    </form>
+                </div>
+                
+                <div class="card">
+                    <h2 class="text-xl font-semibold mb-4 text-white">My Preset Items</h2>
+                    <div id="preset-items-list" class="space-y-3 max-h-[420px] overflow-y-auto pr-2">
+                       <p class="text-gray-400 text-center py-4">You have no saved presets. Create one above!</p>
+                    </div>
+                </div>
+            </div>
+        </main>
+    </div>
+
+    <!-- Modals -->
+    <div id="confirmation-modal" class="modal-backdrop hidden">
+        <div class="modal-content">
+            <h3 id="modal-title" class="text-lg font-bold mb-4 text-white text-center">Are you sure?</h3>
+            <p id="modal-message" class="text-gray-300 mb-6 text-center">This action cannot be undone.</p>
+            <div class="flex justify-center gap-4">
+                <button id="modal-confirm-btn" class="btn btn-danger">Confirm</button>
+                <button id="modal-cancel-btn" class="btn btn-secondary">Cancel</button>
+            </div>
+        </div>
+    </div>
+
+    <div id="settings-modal" class="modal-backdrop hidden">
+        <div class="modal-content">
+            <h3 class="text-xl font-bold mb-6 text-white text-center">Set Daily Goals</h3>
+            <form id="settings-form" class="space-y-4">
+                 <div>
+                    <label for="calorie-goal-input" class="block text-sm font-medium text-gray-300 mb-1 text-left">Calorie Goal (kcal)</label>
+                    <input id="calorie-goal-input" type="number" class="input-field" placeholder="e.g., 2000" required>
+                 </div>
+                 <div>
+                    <label for="protein-goal-input" class="block text-sm font-medium text-gray-300 mb-1 text-left">Protein Goal (g)</label>
+                    <input id="protein-goal-input" type="number" class="input-field" placeholder="e.g., 150" required>
+                 </div>
+                 <div class="flex justify-end gap-4 pt-4">
+                    <button type="button" id="settings-cancel-btn" class="btn btn-secondary">Cancel</button>
+                    <button type="submit" class="btn btn-primary">Save Goals</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+
+    <script type="module">
+        import { initializeApp } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-app.js";
+        import { getAuth, signInAnonymously, onAuthStateChanged, signInWithCustomToken } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-auth.js";
+        import { getFirestore, collection, doc, addDoc, getDocs, deleteDoc, onSnapshot, query, writeBatch, setDoc } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-firestore.js";
+
+        // --- Firebase Configuration ---
+        const firebaseConfig = typeof __firebase_config !== 'undefined' ? JSON.parse(__firebase_config) : { apiKey: "DEMO", authDomain: "DEMO", projectId: "DEMO" };
+        const appId = typeof __app_id !== 'undefined' ? __app_id : 'default-calorie-tracker';
+
+        const app = initializeApp(firebaseConfig);
+        const auth = getAuth(app);
+        const db = getFirestore(app);
+
+        // --- Global State ---
+        let userId = null;
+        let dailyLogUnsubscribe = null;
+        let presetsUnsubscribe = null;
+        let settingsUnsubscribe = null;
+        let calorieGoal = 2000;
+        let proteinGoal = 150;
+
+        // --- UI Element References ---
+        const totalCaloriesEl = document.getElementById('total-calories');
+        const totalProteinEl = document.getElementById('total-protein');
+        const dailyLogListEl = document.getElementById('daily-log-list');
+        const presetItemsListEl = document.getElementById('preset-items-list');
+        const presetSelectEl = document.getElementById('preset-select');
+        // Progress UI
+        const calorieProgressBar = document.getElementById('calorie-progress-bar');
+        const proteinProgressBar = document.getElementById('protein-progress-bar');
+        const remainingCaloriesEl = document.getElementById('remaining-calories');
+        const remainingProteinEl = document.getElementById('remaining-protein');
+
+        // --- Modal Logic ---
+        const confirmationModal = document.getElementById('confirmation-modal');
+        const confirmModalBtn = document.getElementById('modal-confirm-btn');
+        const cancelModalBtn = document.getElementById('modal-cancel-btn');
+        let confirmCallback = null;
+        
+        const settingsModal = document.getElementById('settings-modal');
+        const settingsBtn = document.getElementById('settings-btn');
+        const settingsCancelBtn = document.getElementById('settings-cancel-btn');
+        const settingsForm = document.getElementById('settings-form');
+
+        function showConfirmationModal(title, message, onConfirm) {
+            document.getElementById('modal-title').textContent = title;
+            document.getElementById('modal-message').textContent = message;
+            confirmCallback = onConfirm;
+            confirmationModal.classList.remove('hidden');
+        }
+
+        function hideConfirmationModal() {
+            confirmationModal.classList.add('hidden');
+            confirmCallback = null;
+        }
+
+        confirmModalBtn.addEventListener('click', () => {
+            if(confirmCallback) confirmCallback();
+            hideConfirmationModal();
+        });
+        cancelModalBtn.addEventListener('click', hideConfirmationModal);
+
+        settingsBtn.addEventListener('click', () => {
+            document.getElementById('calorie-goal-input').value = calorieGoal;
+            document.getElementById('protein-goal-input').value = proteinGoal;
+            settingsModal.classList.remove('hidden');
+        });
+        settingsCancelBtn.addEventListener('click', () => settingsModal.classList.add('hidden'));
+
+        // --- Authentication ---
+        onAuthStateChanged(auth, async (user) => {
+            if (user) {
+                userId = user.uid;
+                setupListeners();
+            }
+        });
+        
+        async function initializeAuth() {
+            try {
+                 if (typeof __initial_auth_token !== 'undefined' && __initial_auth_token) {
+                    await signInWithCustomToken(auth, __initial_auth_token);
+                } else {
+                    await signInAnonymously(auth);
+                }
+            } catch (error) {
+                console.error("Authentication failed:", error);
+            }
+        }
+        
+        // --- Firestore Listeners Setup ---
+        function setupListeners() {
+            if (!userId) return;
+
+            if (dailyLogUnsubscribe) dailyLogUnsubscribe();
+            if (presetsUnsubscribe) presetsUnsubscribe();
+            if (settingsUnsubscribe) settingsUnsubscribe();
+
+            const dailyLogRef = collection(db, 'artifacts', appId, 'users', userId, 'dailyLog');
+            dailyLogUnsubscribe = onSnapshot(dailyLogRef, (snapshot) => {
+                const logItems = snapshot.docs.map(doc => ({ id: doc.id, ...doc.data() }));
+                const totals = calculateTotals(logItems);
+                renderDailyLog(logItems);
+                updateTotalsUI(totals);
+                updateProgressUI(totals);
+            });
+            
+            const presetsRef = collection(db, 'artifacts', appId, 'users', userId, 'presetItems');
+            presetsUnsubscribe = onSnapshot(presetsRef, (snapshot) => {
+                const presetItems = snapshot.docs.map(doc => ({ id: doc.id, ...doc.data() }));
+                renderPresetItems(presetItems);
+                updatePresetDropdown(presetItems);
+            });
+
+            const settingsRef = doc(db, 'artifacts', appId, 'users', userId, 'settings', 'userGoals');
+            settingsUnsubscribe = onSnapshot(settingsRef, (doc) => {
+                if (doc.exists()) {
+                    const data = doc.data();
+                    calorieGoal = data.calorieGoal || 2000;
+                    proteinGoal = data.proteinGoal || 150;
+                }
+                const logItems = []; // Recalculate with new goals
+                const totals = calculateTotals(Array.from(dailyLogListEl.querySelectorAll('.log-item')).map(el => JSON.parse(el.dataset.item)));
+                updateProgressUI(totals);
+            });
+        }
+
+        // --- UI Rendering & Calculation ---
+        function calculateTotals(logItems) {
+            const totalCals = logItems.reduce((sum, item) => sum + item.calories, 0);
+            const totalProt = logItems.reduce((sum, item) => sum + item.protein, 0);
+            return { calories: totalCals, protein: totalProt };
+        }
+
+        function renderDailyLog(logItems) {
+            dailyLogListEl.innerHTML = '';
+            if (logItems.length === 0) {
+                dailyLogListEl.innerHTML = `<p class="text-gray-400 text-center py-4">Your daily log is empty. Add an item to get started!</p>`;
+                return;
+            }
+            logItems.forEach(item => {
+                const div = document.createElement('div');
+                div.className = 'log-item flex justify-between items-center bg-gray-700 p-3 rounded-md';
+                div.dataset.item = JSON.stringify(item);
+                div.innerHTML = `
+                    <div>
+                        <p class="font-semibold text-white">${item.name || 'Unnamed Entry'}</p>
+                        <p class="text-sm text-gray-400">🔥 ${Math.round(item.calories)} kcal &nbsp; • &nbsp; 💪 ${Math.round(item.protein)}g protein</p>
+                    </div>
+                    <button data-id="${item.id}" class="delete-log-item-btn text-gray-400 hover:text-red-500 transition-colors p-1">
+                        <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 pointer-events-none" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12" /></svg>
+                    </button>
+                `;
+                dailyLogListEl.appendChild(div);
+            });
+        }
+
+        function renderPresetItems(presetItems) {
+            presetItemsListEl.innerHTML = '';
+            if (presetItems.length === 0) {
+                presetItemsListEl.innerHTML = `<p class="text-gray-400 text-center py-4">You have no saved presets. Create one above!</p>`;
+                return;
+            }
+            presetItems.forEach(item => {
+                const div = document.createElement('div');
+                div.className = 'bg-gray-700 p-3 rounded-md';
+                div.innerHTML = `
+                    <div class="flex justify-between items-start">
+                        <div>
+                            <p class="font-semibold text-white">${item.name}</p>
+                            <p class="text-sm text-gray-400">
+                                ${item.calories} kcal / ${item.protein}g protein per ${item.grams}g
+                            </p>
+                        </div>
+                        <button data-id="${item.id}" class="delete-preset-item-btn text-gray-400 hover:text-red-500 transition-colors p-1">
+                            <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 pointer-events-none" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16" /></svg>
+                        </button>
+                    </div>
+                `;
+                presetItemsListEl.appendChild(div);
+            });
+        }
+
+        function updatePresetDropdown(presetItems) {
+            presetSelectEl.innerHTML = '<option value="" disabled selected>Select a preset food</option>';
+            presetItems.forEach(item => {
+                const option = document.createElement('option');
+                option.value = item.id;
+                option.textContent = item.name;
+                option.dataset.info = JSON.stringify(item);
+                presetSelectEl.appendChild(option);
+            });
+        }
+
+        function updateTotalsUI(totals) {
+            totalCaloriesEl.textContent = Math.round(totals.calories);
+            totalProteinEl.textContent = Math.round(totals.protein);
+        }
+
+        function updateProgressUI(totals) {
+            const calPercent = calorieGoal > 0 ? Math.min((totals.calories / calorieGoal) * 100, 100) : 0;
+            const protPercent = proteinGoal > 0 ? Math.min((totals.protein / proteinGoal) * 100, 100) : 0;
+            
+            calorieProgressBar.style.width = `${calPercent}%`;
+            proteinProgressBar.style.width = `${protPercent}%`;
+
+            const remainingCals = Math.max(0, calorieGoal - totals.calories);
+            const remainingProt = Math.max(0, proteinGoal - totals.protein);
+
+            remainingCaloriesEl.textContent = `Goal: ${calorieGoal} kcal | ${Math.round(remainingCals)} remaining`;
+            remainingProteinEl.textContent = `Goal: ${proteinGoal}g | ${Math.round(remainingProt)}g remaining`;
+        }
+        
+        // --- Firestore Data Functions ---
+        async function addLogItem(data) {
+            if (!userId) return;
+            await addDoc(collection(db, 'artifacts', appId, 'users', userId, 'dailyLog'), data);
+        }
+        
+        async function deleteLogItem(id) {
+             if (!userId) return;
+             await deleteDoc(doc(db, 'artifacts', appId, 'users', userId, 'dailyLog', id));
+        }
+
+        async function resetDailyLog() {
+            if(!userId) return;
+            const snapshot = await getDocs(query(collection(db, 'artifacts', appId, 'users', userId, 'dailyLog')));
+            const batch = writeBatch(db);
+            snapshot.docs.forEach(d => batch.delete(d.ref));
+            await batch.commit();
+        }
+
+        async function addPresetItem(data) {
+            if (!userId) return;
+            await addDoc(collection(db, 'artifacts', appId, 'users', userId, 'presetItems'), data);
+        }
+        
+        async function deletePresetItem(id) {
+            if (!userId) return;
+            await deleteDoc(doc(db, 'artifacts', appId, 'users', userId, 'presetItems', id));
+        }
+
+        async function saveUserSettings(goals) {
+            if (!userId) return;
+            await setDoc(doc(db, 'artifacts', appId, 'users', userId, 'settings', 'userGoals'), goals, { merge: true });
+        }
+
+
+        // --- Event Handlers ---
+        document.getElementById('manual-add-form').addEventListener('submit', (e) => {
+            e.preventDefault();
+            const name = document.getElementById('manual-name').value;
+            const calories = parseFloat(document.getElementById('manual-calories').value);
+            const protein = parseFloat(document.getElementById('manual-protein').value);
+            if (!isNaN(calories) && !isNaN(protein)) {
+                addLogItem({ name: name || 'Unnamed Entry', calories, protein, createdAt: new Date() });
+                e.target.reset();
+            }
+        });
+
+        document.getElementById('preset-add-form').addEventListener('submit', (e) => {
+            e.preventDefault();
+            const selectedOption = presetSelectEl.options[presetSelectEl.selectedIndex];
+            const gramsEaten = parseFloat(document.getElementById('preset-grams').value);
+            if (selectedOption.value && !isNaN(gramsEaten)) {
+                const itemInfo = JSON.parse(selectedOption.dataset.info);
+                const multiplier = gramsEaten / itemInfo.grams;
+                addLogItem({
+                    name: itemInfo.name,
+                    calories: itemInfo.calories * multiplier,
+                    protein: itemInfo.protein * multiplier,
+                    createdAt: new Date()
+                });
+                e.target.reset();
+            }
+        });
+
+        document.getElementById('preset-create-form').addEventListener('submit', (e) => {
+            e.preventDefault();
+            const name = document.getElementById('preset-name').value;
+            const calories = parseFloat(document.getElementById('preset-calories-per-serving').value);
+            const protein = parseFloat(document.getElementById('preset-protein-per-serving').value);
+            const grams = parseFloat(document.getElementById('preset-grams-per-serving').value);
+            if (name && !isNaN(calories) && !isNaN(protein) && !isNaN(grams) && grams > 0) {
+                 addPresetItem({ name, calories, protein, grams });
+                 e.target.reset();
+            }
+        });
+
+        settingsForm.addEventListener('submit', (e) => {
+            e.preventDefault();
+            const newCalorieGoal = parseFloat(document.getElementById('calorie-goal-input').value);
+            const newProteinGoal = parseFloat(document.getElementById('protein-goal-input').value);
+            if (!isNaN(newCalorieGoal) && !isNaN(newProteinGoal)) {
+                saveUserSettings({ calorieGoal: newCalorieGoal, proteinGoal: newProteinGoal });
+                settingsModal.classList.add('hidden');
+            }
+        });
+
+        document.getElementById('reset-day-btn').addEventListener('click', () => {
+            showConfirmationModal(
+                'Reset Daily Log?',
+                'This will permanently delete all entries for today. This action cannot be undone.',
+                resetDailyLog
+            );
+        });
+
+        document.body.addEventListener('click', (e) => {
+            const logDeleteBtn = e.target.closest('.delete-log-item-btn');
+            if(logDeleteBtn) {
+                deleteLogItem(logDeleteBtn.dataset.id);
+            }
+            
+            const presetDeleteBtn = e.target.closest('.delete-preset-item-btn');
+            if(presetDeleteBtn) {
+                showConfirmationModal(
+                    'Delete Preset Item?',
+                    'This will permanently delete this item from your presets list.',
+                    () => deletePresetItem(presetDeleteBtn.dataset.id)
+                );
+            }
+        });
+        
+        initializeAuth();
+    </script>
+</body>
+</html>
+
+
+
