@@ -146,93 +146,115 @@
                 <h1 class="text-4xl md:text-5xl font-bold text-white tracking-tight">Calorie Tracker</h1>
                 <p class="text-lg text-gray-400 mt-2">Your daily nutrition at a glance.</p>
             </div>
-            <button id="settings-btn" class="absolute right-0 top-1/2 -translate-y-1/2 text-gray-400 hover:text-white transition-colors p-2">
-                 <svg class="h-8 w-8" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor">
-                    <path stroke-linecap="round" stroke-linejoin="round" d="M9.594 3.94c.09-.542.56-.94 1.11-.94h2.593c.55 0 1.02.398 1.11.94l.213 1.281c.063.374.313.686.645.87.074.04.147.083.22.127.324.196.72.257 1.075.124l1.217-.456a1.125 1.125 0 011.37.49l1.296 2.247a1.125 1.125 0 01-.26 1.431l-1.003.827c-.293.24-.438.613-.438.995s.145.755.438.995l1.003.827c.48.398.668 1.03.26 1.431l-1.296 2.247a1.125 1.125 0 01-1.37.49l-1.217-.456c-.355-.133-.75-.072-1.076.124a6.57 6.57 0 01-.22.128c-.331.183-.581.495-.644.869l-.213 1.28c-.09.543-.56.941-1.11.941h-2.594c-.55 0-1.02-.398-1.11-.94l-.213-1.281c-.063-.374-.313-.686-.645-.87a6.52 6.52 0 01-.22-.127c-.324-.196-.72-.257-1.075-.124l-1.217.456a1.125 1.125 0 01-1.37-.49l-1.296-2.247a1.125 1.125 0 01.26-1.431l1.004-.827c.292-.24.437-.613.437-.995s-.145-.755-.437-.995l-1.004-.827a1.125 1.125 0 01-.26-1.431l1.296-2.247a1.125 1.125 0 011.37-.49l1.217.456c.355.133.75.072 1.076-.124.072-.044.146-.087.22-.128.332-.183.582-.495.644-.869l.214-1.281z" />
-                    <path stroke-linecap="round" stroke-linejoin="round" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" />
-                </svg>
-            </button>
+            <div class="absolute right-0 top-1/2 -translate-y-1/2 flex gap-2">
+                <button id="settings-btn" class="text-gray-400 hover:text-white transition-colors p-2">
+                    <svg class="h-8 w-8" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor">
+                        <path stroke-linecap="round" stroke-linejoin="round" d="M9.594 3.94c.09-.542.56-.94 1.11-.94h2.593c.55 0 1.02.398 1.11.94l.213 1.281c.063.374.313.686.645.87.074.04.147.083.22.127.324.196.72.257 1.075.124l1.217-.456a1.125 1.125 0 011.37.49l1.296 2.247a1.125 1.125 0 01-.26 1.431l-1.003.827c-.293.24-.438.613-.438.995s.145.755.438.995l1.003.827c.48.398.668 1.03.26 1.431l-1.296 2.247a1.125 1.125 0 01-1.37.49l-1.217-.456c-.355-.133-.75-.072-1.076.124a6.57 6.57 0 01-.22.128c-.331.183-.581.495-.644.869l-.213 1.28c-.09.543-.56.941-1.11.941h-2.594c-.55 0-1.02-.398-1.11-.94l-.213-1.281c-.063-.374-.313-.686-.645-.87a6.52 6.52 0 01-.22-.127c-.324-.196-.72-.257-1.075-.124l-1.217.456a1.125 1.125 0 01-1.37-.49l-1.296-2.247a1.125 1.125 0 01.26-1.431l1.004-.827c.292-.24.437-.613.437-.995s-.145-.755-.437-.995l-1.004-.827a1.125 1.125 0 01-.26-1.431l1.296-2.247a1.125 1.125 0 011.37-.49l1.217.456c.355.133.75.072 1.076-.124.072-.044.146-.087.22-.128.332-.183.582-.495.644-.869l.214-1.281z" />
+                        <path stroke-linecap="round" stroke-linejoin="round" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" />
+                    </svg>
+                </button>
+                <button id="sign-out-btn" class="btn btn-secondary">Sign Out</button>
+            </div>
         </header>
 
-        <main class="grid grid-cols-1 lg:grid-cols-3 gap-8">
-            
-            <div class="lg:col-span-2 space-y-8">
-                 <!-- Totals -->
-                <div class="grid grid-cols-1 sm:grid-cols-2 gap-6">
-                    <div class="total-display">
-                        <div id="total-calories" class="total-value">0</div>
-                        <div class="total-label">Total Calories</div>
-                        <div class="progress-bar-container mt-4">
-                            <div id="calorie-progress-bar" class="progress-bar"></div>
+        <!-- Login Form Section -->
+        <div id="auth-container" class="max-w-md mx-auto card hidden">
+            <h2 id="auth-title" class="text-2xl font-semibold mb-6 text-white text-center">Sign In</h2>
+            <form id="auth-form" class="space-y-4">
+                <input id="email-input" type="email" placeholder="Email" class="input-field" required>
+                <input id="password-input" type="password" placeholder="Password" class="input-field" required>
+                <button type="submit" id="auth-submit-btn" class="btn btn-primary w-full">Sign In</button>
+            </form>
+            <div id="auth-error-message" class="mt-4 text-center text-red-400"></div>
+            <div class="mt-6 text-center">
+                <button id="toggle-auth-mode" class="text-sm text-gray-400 hover:text-gray-200 transition-colors">
+                    Don't have an account? Sign Up
+                </button>
+            </div>
+        </div>
+
+        <!-- Main App Content Section -->
+        <div id="app-container" class="hidden">
+            <main class="grid grid-cols-1 lg:grid-cols-3 gap-8">
+                
+                <div class="lg:col-span-2 space-y-8">
+                    <!-- Totals -->
+                    <div class="grid grid-cols-1 sm:grid-cols-2 gap-6">
+                        <div class="total-display">
+                            <div id="total-calories" class="total-value">0</div>
+                            <div class="total-label">Total Calories</div>
+                            <div class="progress-bar-container mt-4">
+                                <div id="calorie-progress-bar" class="progress-bar"></div>
+                            </div>
+                            <div id="remaining-calories" class="text-sm text-gray-400 mt-2">...</div>
                         </div>
-                        <div id="remaining-calories" class="text-sm text-gray-400 mt-2">...</div>
+                        <div class="total-display">
+                            <div id="total-protein" class="total-value">0</div>
+                            <div class="total-label">Total Protein (g)</div>
+                            <div class="progress-bar-container mt-4">
+                                <div id="protein-progress-bar" class="progress-bar protein-progress-bar"></div>
+                            </div>
+                            <div id="remaining-protein" class="text-sm text-gray-400 mt-2">...</div>
+                        </div>
                     </div>
-                    <div class="total-display">
-                        <div id="total-protein" class="total-value">0</div>
-                        <div class="total-label">Total Protein (g)</div>
-                        <div class="progress-bar-container mt-4">
-                            <div id="protein-progress-bar" class="progress-bar protein-progress-bar"></div>
+
+                    <!-- Add Food Forms -->
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                        <div class="card">
+                            <h2 class="text-xl font-semibold mb-4 text-white">Quick Add</h2>
+                            <form id="manual-add-form" class="space-y-4">
+                                <input id="manual-name" type="text" placeholder="Food Name (optional)" class="input-field">
+                                <input id="manual-calories" type="number" placeholder="Calories" class="input-field" required>
+                                <input id="manual-protein" type="number" placeholder="Protein (g)" class="input-field" required>
+                                <button type="submit" class="btn btn-primary w-full">Add Entry</button>
+                            </form>
                         </div>
-                        <div id="remaining-protein" class="text-sm text-gray-400 mt-2">...</div>
+
+                        <div class="card">
+                            <h2 class="text-xl font-semibold mb-4 text-white">Add From Presets</h2>
+                            <form id="preset-add-form" class="space-y-4">
+                                <select id="preset-select" class="input-field" required>
+                                    <option value="" disabled selected>Select a preset food</option>
+                                </select>
+                                <input id="preset-grams" type="number" placeholder="Grams Eaten" class="input-field" required>
+                                <button type="submit" class="btn btn-primary w-full">Add Preset</button>
+                            </form>
+                        </div>
+                    </div>
+
+                    <!-- Daily Log -->
+                    <div class="card">
+                        <div class="flex justify-between items-center mb-4">
+                            <h2 class="text-xl font-semibold text-white">Today's Log</h2>
+                            <button id="reset-day-btn" class="btn btn-danger">Reset Day</button>
+                        </div>
+                        <div id="daily-log-list" class="space-y-3 max-h-96 overflow-y-auto pr-2">
+                            <p class="text-gray-400 text-center py-4">Your daily log is empty. Add an item to get started!</p>
+                        </div>
                     </div>
                 </div>
 
-                <!-- Add Food Forms -->
-                <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                <div class="lg:col-span-1 space-y-8">
                     <div class="card">
-                        <h2 class="text-xl font-semibold mb-4 text-white">Quick Add</h2>
-                        <form id="manual-add-form" class="space-y-4">
-                            <input id="manual-name" type="text" placeholder="Food Name (optional)" class="input-field">
-                            <input id="manual-calories" type="number" placeholder="Calories" class="input-field" required>
-                            <input id="manual-protein" type="number" placeholder="Protein (g)" class="input-field" required>
-                            <button type="submit" class="btn btn-primary w-full">Add Entry</button>
+                        <h2 class="text-xl font-semibold mb-4 text-white">Create Preset Item</h2>
+                        <form id="preset-create-form" class="space-y-4">
+                            <input id="preset-name" type="text" placeholder="Item Name" class="input-field" required>
+                            <input id="preset-calories-per-serving" type="number" placeholder="Calories per serving" class="input-field" required>
+                            <input id="preset-protein-per-serving" type="number" placeholder="Protein (g) per serving" class="input-field" required>
+                            <input id="preset-grams-per-serving" type="number" placeholder="Grams per serving" class="input-field" required>
+                            <button type="submit" class="btn btn-secondary w-full">Save New Preset</button>
                         </form>
                     </div>
-
+                    
                     <div class="card">
-                         <h2 class="text-xl font-semibold mb-4 text-white">Add From Presets</h2>
-                         <form id="preset-add-form" class="space-y-4">
-                            <select id="preset-select" class="input-field" required>
-                                <option value="" disabled selected>Select a preset food</option>
-                            </select>
-                            <input id="preset-grams" type="number" placeholder="Grams Eaten" class="input-field" required>
-                            <button type="submit" class="btn btn-primary w-full">Add Preset</button>
-                         </form>
+                        <h2 class="text-xl font-semibold mb-4 text-white">My Preset Items</h2>
+                        <div id="preset-items-list" class="space-y-3 max-h-[420px] overflow-y-auto pr-2">
+                            <p class="text-gray-400 text-center py-4">You have no saved presets. Create one above!</p>
+                        </div>
                     </div>
                 </div>
-
-                <!-- Daily Log -->
-                <div class="card">
-                    <div class="flex justify-between items-center mb-4">
-                        <h2 class="text-xl font-semibold text-white">Today's Log</h2>
-                        <button id="reset-day-btn" class="btn btn-danger">Reset Day</button>
-                    </div>
-                    <div id="daily-log-list" class="space-y-3 max-h-96 overflow-y-auto pr-2">
-                        <p class="text-gray-400 text-center py-4">Your daily log is empty. Add an item to get started!</p>
-                    </div>
-                </div>
-            </div>
-
-            <div class="lg:col-span-1 space-y-8">
-                <div class="card">
-                    <h2 class="text-xl font-semibold mb-4 text-white">Create Preset Item</h2>
-                    <form id="preset-create-form" class="space-y-4">
-                        <input id="preset-name" type="text" placeholder="Item Name" class="input-field" required>
-                        <input id="preset-calories-per-serving" type="number" placeholder="Calories per serving" class="input-field" required>
-                        <input id="preset-protein-per-serving" type="number" placeholder="Protein (g) per serving" class="input-field" required>
-                        <input id="preset-grams-per-serving" type="number" placeholder="Grams per serving" class="input-field" required>
-                        <button type="submit" class="btn btn-secondary w-full">Save New Preset</button>
-                    </form>
-                </div>
-                
-                <div class="card">
-                    <h2 class="text-xl font-semibold mb-4 text-white">My Preset Items</h2>
-                    <div id="preset-items-list" class="space-y-3 max-h-[420px] overflow-y-auto pr-2">
-                       <p class="text-gray-400 text-center py-4">You have no saved presets. Create one above!</p>
-                    </div>
-                </div>
-            </div>
-        </main>
+            </main>
+        </div>
     </div>
 
     <!-- Modals -->
@@ -270,16 +292,30 @@
 
     <script type="module">
         import { initializeApp } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-app.js";
-        import { getAuth, signInAnonymously, onAuthStateChanged, signInWithCustomToken } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-auth.js";
+        import { getAnalytics } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-analytics.js";
+        import { getAuth, signInAnonymously, onAuthStateChanged, signInWithCustomToken, createUserWithEmailAndPassword, signInWithEmailAndPassword, signOut } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-auth.js";
         import { getFirestore, collection, doc, addDoc, getDocs, deleteDoc, onSnapshot, query, writeBatch, setDoc } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-firestore.js";
+        import { setLogLevel } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-firestore.js";
+        setLogLevel('debug');
+
 
         // --- Firebase Configuration ---
-        const firebaseConfig = typeof __firebase_config !== 'undefined' ? JSON.parse(__firebase_config) : { apiKey: "DEMO", authDomain: "DEMO", projectId: "DEMO" };
-        const appId = typeof __app_id !== 'undefined' ? __app_id : 'default-calorie-tracker';
-
+        // Your web app's Firebase configuration
+        const firebaseConfig = {
+          apiKey: "AIzaSyB4iAdgyVJ6LqT4bI5jED4UW0Nu8y3UCTQ",
+          authDomain: "calorietracker26.firebaseapp.com",
+          projectId: "calorietracker26",
+          storageBucket: "calorietracker26.firebasestorage.app",
+          messagingSenderId: "712198260830",
+          appId: "1:712198260830:web:4e030fdfda05a0e1a28ccf",
+          measurementId: "G-N33M5F50K9"
+        };
+        
         const app = initializeApp(firebaseConfig);
+        const analytics = getAnalytics(app);
         const auth = getAuth(app);
         const db = getFirestore(app);
+        const appId = firebaseConfig.appId;
 
         // --- Global State ---
         let userId = null;
@@ -288,8 +324,11 @@
         let settingsUnsubscribe = null;
         let calorieGoal = 2000;
         let proteinGoal = 150;
+        let isAuthReady = false;
 
         // --- UI Element References ---
+        const appContainer = document.getElementById('app-container');
+        const authContainer = document.getElementById('auth-container');
         const totalCaloriesEl = document.getElementById('total-calories');
         const totalProteinEl = document.getElementById('total-protein');
         const dailyLogListEl = document.getElementById('daily-log-list');
@@ -300,6 +339,17 @@
         const proteinProgressBar = document.getElementById('protein-progress-bar');
         const remainingCaloriesEl = document.getElementById('remaining-calories');
         const remainingProteinEl = document.getElementById('remaining-protein');
+        // Auth UI
+        const authForm = document.getElementById('auth-form');
+        const authTitle = document.getElementById('auth-title');
+        const authSubmitBtn = document.getElementById('auth-submit-btn');
+        const authErrorMessage = document.getElementById('auth-error-message');
+        const toggleAuthModeBtn = document.getElementById('toggle-auth-mode');
+        const signOutBtn = document.getElementById('sign-out-btn');
+        // New Goal Display UI
+        const calorieGoalDisplay = document.getElementById('calorie-goal-display');
+        const proteinGoalDisplay = document.getElementById('protein-goal-display');
+
 
         // --- Modal Logic ---
         const confirmationModal = document.getElementById('confirmation-modal');
@@ -338,22 +388,37 @@
         settingsCancelBtn.addEventListener('click', () => settingsModal.classList.add('hidden'));
 
         // --- Authentication ---
+        let isSignUpMode = false;
+        
         onAuthStateChanged(auth, async (user) => {
+            isAuthReady = true;
             if (user) {
                 userId = user.uid;
+                appContainer.classList.remove('hidden');
+                authContainer.classList.add('hidden');
                 setupListeners();
+            } else {
+                userId = null;
+                appContainer.classList.add('hidden');
+                authContainer.classList.remove('hidden');
+                // Unsubscribe from previous listeners
+                if (dailyLogUnsubscribe) dailyLogUnsubscribe();
+                if (presetsUnsubscribe) presetsUnsubscribe();
+                if (settingsUnsubscribe) settingsUnsubscribe();
             }
         });
         
         async function initializeAuth() {
-            try {
-                 if (typeof __initial_auth_token !== 'undefined' && __initial_auth_token) {
-                    await signInWithCustomToken(auth, __initial_auth_token);
-                } else {
-                    await signInAnonymously(auth);
+            if (!auth.currentUser) {
+                try {
+                     if (typeof __initial_auth_token !== 'undefined' && __initial_auth_token) {
+                        await signInWithCustomToken(auth, __initial_auth_token);
+                    } else {
+                        await signInAnonymously(auth);
+                    }
+                } catch (error) {
+                    console.error("Authentication failed:", error);
                 }
-            } catch (error) {
-                console.error("Authentication failed:", error);
             }
         }
         
@@ -388,8 +453,8 @@
                     calorieGoal = data.calorieGoal || 2000;
                     proteinGoal = data.proteinGoal || 150;
                 }
-                const logItems = []; // Recalculate with new goals
-                const totals = calculateTotals(Array.from(dailyLogListEl.querySelectorAll('.log-item')).map(el => JSON.parse(el.dataset.item)));
+                const dailyLogItems = Array.from(dailyLogListEl.querySelectorAll('.log-item')).map(el => JSON.parse(el.dataset.item));
+                const totals = calculateTotals(dailyLogItems);
                 updateProgressUI(totals);
             });
         }
@@ -479,7 +544,7 @@
             remainingCaloriesEl.textContent = `Goal: ${calorieGoal} kcal | ${Math.round(remainingCals)} remaining`;
             remainingProteinEl.textContent = `Goal: ${proteinGoal}g | ${Math.round(remainingProt)}g remaining`;
         }
-        
+
         // --- Firestore Data Functions ---
         async function addLogItem(data) {
             if (!userId) return;
@@ -565,6 +630,42 @@
                 settingsModal.classList.add('hidden');
             }
         });
+        
+        authForm.addEventListener('submit', async (e) => {
+            e.preventDefault();
+            authErrorMessage.textContent = '';
+            const email = document.getElementById('email-input').value;
+            const password = document.getElementById('password-input').value;
+            
+            try {
+                if (isSignUpMode) {
+                    await createUserWithEmailAndPassword(auth, email, password);
+                } else {
+                    await signInWithEmailAndPassword(auth, email, password);
+                }
+            } catch (error) {
+                authErrorMessage.textContent = error.message;
+                console.error(error);
+            }
+        });
+        
+        toggleAuthModeBtn.addEventListener('click', () => {
+            isSignUpMode = !isSignUpMode;
+            if (isSignUpMode) {
+                authTitle.textContent = 'Sign Up';
+                authSubmitBtn.textContent = 'Sign Up';
+                toggleAuthModeBtn.textContent = 'Already have an account? Sign In';
+            } else {
+                authTitle.textContent = 'Sign In';
+                authSubmitBtn.textContent = 'Sign In';
+                toggleAuthModeBtn.textContent = 'Don\'t have an account? Sign Up';
+            }
+            authErrorMessage.textContent = '';
+        });
+        
+        signOutBtn.addEventListener('click', () => {
+            signOut(auth);
+        });
 
         document.getElementById('reset-day-btn').addEventListener('click', () => {
             showConfirmationModal(
@@ -594,6 +695,3 @@
     </script>
 </body>
 </html>
-
-
-
